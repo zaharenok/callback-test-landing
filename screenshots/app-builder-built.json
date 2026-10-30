@@ -1,0 +1,38 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "CallBack — Instant AI callback for your website",
+      "hasCanvas": false,
+      "bodyTextLen": 3441,
+      "bodyTextHash": "cc54d1b9888e04f5707d7908a23f57f1245cb8a49bedcd3b5dacf50c250118de",
+      "bodyTextPrefix": "CallBack AI calls back in 60 seconds Problem Solution Proof Stor",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "CallBack — Instant AI callback for your website",
+      "hasCanvas": false,
+      "bodyTextLen": 3359,
+      "bodyTextHash": "fa7ce7a52cd9a30301dee9707f53282f35ec8ab817a26c1838b100762e248d28",
+      "bodyTextPrefix": "CallBack EN DE 1. HEADLINE Your next lead should hear a voice in",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": false,
+  "baselineReasons": []
+}

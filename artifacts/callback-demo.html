@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CallBack — Instant AI Callback Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background: #f4f4f0;
+      color: #000;
+      overflow-x: hidden;
+    }
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #f4f4f0;
+    }
+
+    .blob {
+      position: absolute;
+      border: 3px solid #000;
+      animation: float 14s ease-in-out infinite;
+    }
+
+    .blob-1 {
+      width: 280px; height: 280px;
+      background: #ff90e8;
+      top: -60px; left: -40px;
+      border-radius: 40% 60% 50% 50%;
+    }
+
+    .blob-2 {
+      width: 220px; height: 220px;
+      background: #ffc900;
+      bottom: 40px; right: -50px;
+      border-radius: 60% 40% 50% 50%;
+      animation-delay: -5s;
+    }
+
+    .blob-3 {
+      width: 160px; height: 160px;
+      background: #90e0ff;
+      top: 45%; left: 70%;
+      border-radius: 50%;
+      animation-delay: -9s;
+    }
+
+    .blob-4 {
+      width: 120px; height: 120px;
+      background: #ff6b6b;
+      top: 20%; right: 18%;
+      border-radius: 30% 70% 60% 40%;
+      animation-delay: -3s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(30px, -25px) rotate(4deg); }
+      50% { transform: translate(-20px, 30px) rotate(-3deg); }
+      75% { transform: translate(15px, 15px) rotate(2deg); }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      border-bottom: 3px solid #000;
+      background: #f4f4f0;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: #ff90e8;
+      border: 2.5px solid #000;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .lang-switch {
+      display: flex;
+      border: 2.5px solid #000;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .lang-btn {
+      padding: 7px 16px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: #000;
+      transition: all 0.15s;
+    }
+
+    .lang-btn.active { background: #000; color: #fff; }
+    .lang-btn:not(.active):hover { background: #ffc900; }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px 60px;
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 620px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: clamp(36px, 5.5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .sub {
+      font-size: 17px;
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 28px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .benefits {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      background: #fff;
+      border: 2.5px solid #000;
+      border-radius: 8px;
+      padding: 8px 14px;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .benefit-num {
+      width: 22px; height: 22px;
+      background: #ff90e8;
+      border: 2px solid #000;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .form-card {
+      background: #fff;
+      border: 3px solid #000;
+      border-radius: 14px;
+      padding: 28px 28px 24px;
+      box-shadow: 6px 6px 0 #000;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .input-wrap { position: relative; margin-bottom: 14px; }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+    }
+
+    input[type="tel"] {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      font-size: 16px;
+      font-family: inherit;
+      border: 2.5px solid #000;
+      border-radius: 10px;
+      background: #fff;
+      outline: none;
+      color: #000;
+      transition: box-shadow 0.15s;
+    }
+
+    input[type="tel"]:focus { box-shadow: 3px 3px 0 #ff90e8; }
+    input[type="tel"]::placeholder { color: #888; }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .consent input[type="checkbox"] {
+      margin-top: 2px;
+      width: 18px; height: 18px;
+      accent-color: #000;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .consent label {
+      font-size: 13px;
+      color: #333;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .consent a {
+      color: #000;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .cta {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      color: #000;
+      background: #ff90e8;
+      border: 2.5px solid #000;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 4px 4px 0 #000;
+    }
+
+    .cta:hover:not(:disabled) {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+
+    .cta:active:not(:disabled) {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .cta:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: 2px 2px 0 #000;
+    }
+
+    .cta.loading { pointer-events: none; }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(0,0,0,0.2);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .cta.loading .spinner { display: block; }
+    .cta.loading .btn-text { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .micro {
+      margin-top: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .success { display: none; text-align: center; padding: 8px 0 4px; }
+    .form-card.submitted .form-content { display: none; }
+    .form-card.submitted .success { display: block; }
+
+    .success-icon {
+      width: 52px; height: 52px;
+      background: #ffc900;
+      border: 2.5px solid #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .success h3 { font-size: 20px; margin-bottom: 8px; }
+    .success p { font-size: 14px; color: #333; line-height: 1.5; }
+
+    @media (max-width: 600px) {
+      header { padding: 16px; }
+      h1 { font-size: 32px; }
+      .sub { font-size: 15px; }
+      .benefits { gap: 8px; }
+      .benefit { font-size: 13px; padding: 6px 10px; }
+      .form-card { padding: 22px 18px; box-shadow: 4px 4px 0 #000; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+  </div>
+
+  <div class="page">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">☎</div>
+        CallBack
+      </div>
+      <div class="lang-switch">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="de">DE</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="hero">
+        <h1 id="headline">Experience instant AI callback in 60 seconds</h1>
+        <p class="sub" id="subtext">
+          See exactly how your website can call leads back in under a minute — with a real AI voice. No sales pitch. Just the product in action.
+        </p>
+
+        <div class="benefits">
+          <div class="benefit">
+            <div class="benefit-num">1</div>
+            <span id="b1">Leave your number</span>
+          </div>
+          <div class="benefit">
+            <div class="benefit-num">2</div>
+            <span id="b2">AI calls in 60 sec</span>
+          </div>
+          <div class="benefit">
+            <div class="benefit-num">3</div>
+            <span id="b3">Experience it live</span>
+          </div>
+        </div>
+
+        <div class="form-card" id="formCard">
+          <div class="form-content">
+            <div class="form-label" id="formLabel">Try the live demo</div>
+
+            <div class="input-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <input type="tel" id="phone" placeholder="+49 170 0000000" autocomplete="tel" />
+            </div>
+
+            <div class="consent">
+              <input type="checkbox" id="consent" />
+              <label for="consent" id="consentText">
+                I agree to receive a one-time AI demo call and consent to the processing of my phone number 
+                (<a href="#" onclick="return false;">GDPR</a>).
+              </label>
+            </div>
+
+            <button class="cta" id="ctaBtn" disabled>
+              <span class="btn-text" id="btnText">Call me now</span>
+              <div class="spinner"></div>
+            </button>
+          </div>
+
+          <div class="success">
+            <div class="success-icon">✓</div>
+            <h3 id="successTitle">We're calling you now</h3>
+            <p id="successText">Our AI will ring your phone in the next 45–60 seconds. Pick up to experience the demo.</p>
+          </div>
+        </div>
+
+        <p class="micro" id="micro">Real AI voice · No spam · One-time demo only</p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const phoneInput = document.getElementById('phone');
+    const consentCheckbox = document.getElementById('consent');
+    const ctaBtn = document.getElementById('ctaBtn');
+    const formCard = document.getElementById('formCard');
+
+    function updateButtonState() {
+      const hasPhone = phoneInput.value.trim().length >= 8;
+      const hasConsent = consentCheckbox.checked;
+      ctaBtn.disabled = !(hasPhone && hasConsent);
+    }
+
+    phoneInput.addEventListener('input', updateButtonState);
+    consentCheckbox.addEventListener('change', updateButtonState);
+
+    ctaBtn.addEventListener('click', () => {
+      if (ctaBtn.disabled) return;
+      ctaBtn.classList.add('loading');
+      setTimeout(() => {
+        formCard.classList.add('submitted');
+        ctaBtn.classList.remove('loading');
+      }, 1100);
+    });
+
+    const translations = {
+      en: {
+        headline: 'Experience instant AI callback in 60 seconds',
+        subtext: 'See exactly how your website can call leads back in under a minute — with a real AI voice. No sales pitch. Just the product in action.',
+        b1: 'Leave your number', b2: 'AI calls in 60 sec', b3: 'Experience it live',
+        formLabel: 'Try the live demo',
+        consent: 'I agree to receive a one-time AI demo call and consent to the processing of my phone number (GDPR).',
+        btn: 'Call me now', micro: 'Real AI voice · No spam · One-time demo only',
+        successTitle: "We're calling you now",
+        successText: 'Our AI will ring your phone in the next 45–60 seconds. Pick up to experience the demo.'
+      },
+      de: {
+        headline: 'Erlebe sofortigen AI-Rückruf in 60 Sekunden',
+        subtext: 'Sieh genau, wie deine Website Leads in unter einer Minute zurückrufen kann — mit echter AI-Stimme. Kein Sales-Pitch. Einfach das Produkt in Aktion.',
+        b1: 'Nummer hinterlassen', b2: 'KI ruft in 60 Sek.', b3: 'Live erleben',
+        formLabel: 'Live-Demo ausprobieren',
+        consent: 'Ich stimme einem einmaligen AI-Demo-Anruf zu und willige in die Verarbeitung meiner Telefonnummer ein (DSGVO).',
+        btn: 'Jetzt anrufen', micro: 'Echte AI-Stimme · Kein Spam · Nur einmalige Demo',
+        successTitle: 'Wir rufen dich jetzt an',
+        successText: 'Unsere KI wird in den nächsten 45–60 Sekunden anrufen. Nimm ab, um die Demo zu erleben.'
+      }
+    };
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const t = translations[btn.dataset.lang];
+        document.getElementById('headline').textContent = t.headline;
+        document.getElementById('subtext').textContent = t.subtext;
+        document.getElementById('b1').textContent = t.b1;
+        document.getElementById('b2').textContent = t.b2;
+        document.getElementById('b3').textContent = t.b3;
+        document.getElementById('formLabel').textContent = t.formLabel;
+        document.getElementById('consentText').innerHTML = t.consent.replace(/(GDPR|DSGVO)/, '<a href="#" onclick="return false;">$1</a>');
+        document.getElementById('btnText').textContent = t.btn;
+        document.getElementById('micro').textContent = t.micro;
+        document.getElementById('successTitle').textContent = t.successTitle;
+        document.getElementById('successText').textContent = t.successText;
+      });
+    });
+
+    phoneInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/[^\d+\s()-]/g, '');
+    });
+  </script>
+</body>
+</html>

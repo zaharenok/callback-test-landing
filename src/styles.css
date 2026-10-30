@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f4f4f0;
+  --color-ink: #111111;
+  --color-muted: #3d3d38;
+  --color-line: #111111;
+  --color-card: #ffffff;
+  --color-pink: #ff90e8;
+  --color-sun: #ffc900;
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --shadow-hard: 6px 6px 0 #111111;
+  --shadow-hard-sm: 3px 3px 0 #111111;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    .float-shape {
+      animation: none !important;
+    }
+  }
+}
+
+.hard {
+  border: 3px solid var(--color-ink);
+  box-shadow: var(--shadow-hard);
+}
+
+.hard-sm {
+  border: 2.5px solid var(--color-ink);
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.press {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.press:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--color-ink);
+}
+
+.press:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-ink);
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(18px, -22px) rotate(6deg);
+  }
+}
+
+.float-shape {
+  animation: drift 9s ease-in-out infinite;
+}
