@@ -1,6 +1,9 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { Phone, Menu, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Menu, Phone, X } from "lucide-react";
+import { LangMenu } from "@/components/lang-menu";
 import { copy, type Lang } from "@/lib/copy";
+import { useLang } from "@/lib/lang";
 
 function DemoForm({ lang }: { lang: Lang }) {
   const t = copy[lang];
@@ -70,7 +73,7 @@ function DemoForm({ lang }: { lang: Lang }) {
 }
 
 export function Landing() {
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang, setLang] = useLang();
   const [open, setOpen] = useState(false);
   const t = copy[lang];
   const nav = useMemo(() => t.nav, [t]);
@@ -89,7 +92,7 @@ export function Landing() {
         />
       </div>
 
-      <header className="sticky top-0 z-40 w-full border-b-[3px] border-ink bg-paper">
+      <header className="z-40 w-full border-b-[3px] border-ink bg-paper">
         <div className="flex w-full items-center gap-4 px-4 py-3 md:px-8">
           <a href="#top" className="flex shrink-0 items-center gap-2 font-bold">
             <span className="hard-sm flex size-9 items-center justify-center bg-pink">
@@ -110,18 +113,7 @@ export function Landing() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 lg:ml-4">
-            <div className="hard-sm flex overflow-hidden bg-card">
-              {(["en", "de"] as const).map((code) => (
-                <button
-                  key={code}
-                  type="button"
-                  onClick={() => setLang(code)}
-                  className={`px-3 py-1.5 text-sm font-bold ${lang === code ? "bg-ink text-paper" : "bg-card"}`}
-                >
-                  {code.toUpperCase()}
-                </button>
-              ))}
-            </div>
+            <LangMenu lang={lang} onPick={setLang} />
             <a href="#demo" className="press hard-sm hidden bg-pink px-4 py-2 text-sm font-bold sm:inline-block">
               {t.try}
             </a>
@@ -199,7 +191,21 @@ export function Landing() {
           </div>
         </section>
 
-        <section id="who" className="border-y-[3px] border-ink bg-paper">
+        <section id="ads" className="border-y-[3px] border-ink bg-ink text-paper">
+          <div className="mx-auto w-full max-w-6xl px-4 py-16 md:px-8">
+            <h2 className="max-w-3xl text-3xl font-bold tracking-tight md:text-5xl">{t.adsTitle}</h2>
+            <p className="mt-4 max-w-2xl text-lg text-paper/80">{t.adsBody}</p>
+            <ul className="mt-8 grid gap-3 md:grid-cols-3">
+              {t.adsPoints.map((point) => (
+                <li key={point} className="border-[3px] border-paper p-4 font-bold">
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section id="who" className="bg-paper">
           <div className="mx-auto w-full max-w-6xl px-4 py-16 md:px-8">
             <h2 className="max-w-3xl text-3xl font-bold tracking-tight md:text-5xl">{t.whoTitle}</h2>
             <p className="mt-4 max-w-2xl text-lg text-muted">{t.whoBody}</p>
@@ -217,7 +223,7 @@ export function Landing() {
           </div>
         </section>
 
-        <section id="proof" className="border-b-[3px] border-ink bg-sun">
+        <section id="proof" className="border-y-[3px] border-ink bg-sun">
           <div className="mx-auto w-full max-w-6xl px-4 py-16 md:px-8">
             <h2 className="max-w-3xl text-3xl font-bold tracking-tight md:text-5xl">{t.proofTitle}</h2>
             <p className="mt-4 max-w-2xl text-lg">{t.proofBody}</p>
@@ -266,6 +272,32 @@ export function Landing() {
           </div>
         </section>
 
+        <section id="pricing" className="mx-auto w-full max-w-6xl px-4 py-16 md:px-8">
+          <h2 className="max-w-3xl text-3xl font-bold tracking-tight md:text-5xl">{t.priceTitle}</h2>
+          <p className="mt-4 max-w-2xl text-lg text-muted">{t.priceBody}</p>
+          <div className="mt-10 grid gap-4 lg:grid-cols-3">
+            {t.plans.map((plan) => (
+              <article key={plan.name} className={`hard flex flex-col bg-card p-5 ${plan.hot ? "bg-pink" : ""}`}>
+                <h3 className="text-xl font-bold">{plan.name}</h3>
+                <p className="mt-3 text-4xl font-bold tracking-tight">
+                  {plan.price}
+                  <span className="text-base font-semibold">{plan.unit}</span>
+                </p>
+                <p className="mt-2">{plan.pitch}</p>
+                <ul className="mt-4 flex-1 space-y-2 text-sm">
+                  {plan.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+                <a href="#cta" className="press hard-sm mt-6 bg-ink py-3 text-center font-bold text-paper">
+                  {plan.cta}
+                </a>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-muted">{t.priceFoot}</p>
+        </section>
+
         <section id="faq" className="mx-auto w-full max-w-3xl px-4 py-16 md:px-8">
           <h2 className="text-3xl font-bold tracking-tight md:text-5xl">{t.faqTitle}</h2>
           <div className="mt-8 divide-y-[3px] divide-ink border-[3px] border-ink bg-card">
@@ -309,8 +341,12 @@ export function Landing() {
             <a href="#demo" className="underline-offset-4 hover:underline">
               {t.try}
             </a>
-            <span className="text-paper/50">{t.privacy}</span>
-            <span className="text-paper/50">{t.terms}</span>
+            <Link to="/privacy" className="underline-offset-4 hover:underline">
+              {t.privacy}
+            </Link>
+            <Link to="/terms" className="underline-offset-4 hover:underline">
+              {t.terms}
+            </Link>
           </nav>
         </div>
       </footer>
